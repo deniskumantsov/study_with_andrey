@@ -1,44 +1,30 @@
-from schemas.user_response import UserResponse
+from schemas.user_response import UserResponseSchema
 
-# убрать return
+
 class CommandChecker:
     """
     Класс для проверки ответа от сервера.
     """
     @staticmethod
-    def check_status_code(response: dict, expected_status: int):
+    def check_status_code(response, expected_status: int):
         """
         Проверка, что код ответа совпадает с ожидаемым.
-        :param response: Словарь с ответом от сервера.
-        :param expected_status: Ожидаемый код ответа.
+        :param response: Объект Response.
+        :param expected_status: Ожидаемый статус код.
         """
-        assert response["status_code"] == expected_status, (
-            f"Ожидаемый статус-код: {expected_status}, фактический статус-код: {response['status_code']}. "
-            f"Тело ответа: {response['json']}"
+        assert response.status_code == expected_status, (
+            f"Ожидаемый статус-код: {expected_status}, фактический статус-код: {response.status_code}."
         )
 
 
     @staticmethod
-    def check_header_content_type(response: dict): # Переделать, проблема с регистром
+    def check_response_body(response, payload: dict):
         """
-        Проверка, что заголовок ответа "Content-Type" есть, формат данных - "application/json".
-        :param response: Словарь с ответом от сервера.
-        :return:
-        """
-        assert response["headers"]["Content-Type"] == "application/json", (
-            f"Ожидаемый формат данных: application/json, фактический формат данных: '{response['headers'].get('Content-Type')}'."
-        )
-
-
-    @staticmethod
-    def check_response_body(response: dict, payload: dict):
-        """
-        Проверка, что данные в теле ответа совпадают с данными в теле запроса.
-        :param response: Словарь с ответом от сервера.
+        Проверка, что данные в теле ответа совпадают с ожидаемыми в теле ответа.
+        :param response: Объект Response.
         :param payload: Тело(json) запроса к серверу.
-        :return:
         """
-        user_response = UserResponse(**response["json"])
+        user_response = UserResponseSchema(**response.json())
         assert user_response.phone_number == payload["phone_number"], (
             f"Ожидаемый phone_number: {payload['phone_number']}, фактический phone_number: {user_response.phone_number}"
         )
@@ -60,3 +46,15 @@ class CommandChecker:
         assert user_response.passport_number == payload["passport_number"], (
             f"Ожидаемый passport_number: {payload['passport_number']}, фактический passport_number: {user_response.passport_number}"
         )
+
+
+    # @staticmethod
+    # def check_header_content_type(response: dict): # Переделать, проблема с регистром
+    #     """
+    #     Проверка, что заголовок ответа "Content-Type" есть, формат данных - "application/json".
+    #     :param response: Словарь с ответом от сервера.
+    #     """
+    #     assert response["headers"]["Content-Type"] == "application/json", (
+    #         f"Ожидаемый формат данных: application/json, фактический формат данных: '{response['headers'].get('Content-Type')}'."
+    #     )
+    #

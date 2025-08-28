@@ -8,7 +8,7 @@ class UserSteps:
         self.request = UserRequest()
         self.payload = payloads
 
-    def user_create_succesfull(self, **kwargs):
+    def user_create_successful(self, **kwargs):
         payload = self.payload.get_request_body_for_user(**kwargs)
         response = self.request.create_user_request(payload)
         CommandChecker.check_status_code(response, 200)

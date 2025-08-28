@@ -12,7 +12,7 @@ def generate_valid_phone_number() -> int:
     """
     phone_number = random.randint(10**9, 10**10-1)
     return phone_number
-print(generate_valid_phone_number())
+# print(generate_valid_phone_number())
 
 
 def generate_valid_firstname() -> str:
@@ -21,7 +21,7 @@ def generate_valid_firstname() -> str:
     :return
     """
     return faker.first_name()
-print(generate_valid_firstname())
+# print(generate_valid_firstname())
 
 
 def generate_valid_lastname() -> str:
@@ -30,7 +30,7 @@ def generate_valid_lastname() -> str:
     :return
     """
     return faker.last_name()
-print(generate_valid_lastname())
+# print(generate_valid_lastname())
 
 
 def generate_valid_patronymic() -> str:
@@ -39,7 +39,7 @@ def generate_valid_patronymic() -> str:
     :return
     """
     return faker.middle_name()
-print(generate_valid_patronymic())
+# print(generate_valid_patronymic())
 
 
 def generate_valid_patronymic_none() -> None:
@@ -48,7 +48,7 @@ def generate_valid_patronymic_none() -> None:
         :return
         """
     return None
-print(generate_valid_patronymic_none())
+# print(generate_valid_patronymic_none())
 
 
 def generate_valid_birthday() -> str:
@@ -58,7 +58,7 @@ def generate_valid_birthday() -> str:
     """
     birthday = faker.date_of_birth(minimum_age=18, maximum_age=100)
     return birthday.isoformat()
-print(generate_valid_birthday())
+# print(generate_valid_birthday())
 
 
 def generate_valid_passport_serial() -> int:
@@ -68,7 +68,7 @@ def generate_valid_passport_serial() -> int:
     """
     passport_serial = random.randint(10**3, 10**4-1)
     return passport_serial
-print(generate_valid_passport_serial())
+# print(generate_valid_passport_serial())
 
 
 def generate_valid_passport_number() -> int:
@@ -78,7 +78,7 @@ def generate_valid_passport_number() -> int:
     """
     passport_number = random.randint(10**5, 10**6-1)
     return passport_number
-print(generate_valid_passport_number())
+# print(generate_valid_passport_number())
 
 # Переделать
 def generate_valid_password() -> str:
@@ -88,4 +88,4 @@ def generate_valid_password() -> str:
     """
     password = "Qwerty!123"
     return password
-print(generate_valid_password())
+# print(generate_valid_password())
