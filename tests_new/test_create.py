@@ -5,20 +5,47 @@ from utils.generators import generate_valid_patronymic_none
 from data import data_test_user as test_data
 
 
-# Добавить проверку заголовков
-def test_create_user_with_non_required(delete_user):
+# # Добавить проверку заголовков
+# def test_create_user_with_non_required(delete_user):
+#     """
+#     Позитивная проверка создания пользователя с отчеством.
+#     :param user_request:
+#     :return:
+#     """
+#     user_steps = UserSteps()
+#     # 1. Создать пользователя с валидными данными.
+#     user_data_response = user_steps.user_create_successful(**test_data.request_body)
+#     # 2. Проверить наличие созд пользователя в БД.
+#     user_data = user_steps.get_user_by_id(user_id=user_data_response["json"]["id"])
+#     CommandChecker.check_response_body(user_data, test_data.request_body)
+#     delete_user(user_data_response["json"]["id"])
+
+def test_create_user_with_non_required():
     """
-    Позитивная проверка создания пользователя с отчеством.
-    :param user_request:
-    :return:
+
+    :param delete_user:
     """
     user_steps = UserSteps()
-    # 1. Создать пользователя с валидными данными.
-    user_data_response = user_steps.user_create_successful(**test_data.request_body)
-    # 2. Проверить наличие созд пользователя в БД.
-    user_data = user_steps.get_user_by_id(user_id=user_data_response["json"]["id"])
-    CommandChecker.check_response_body(user_data, test_data.request_body)
-    delete_user(user_data_response["json"]["id"])
+
+    # 1. Создаём пользователя с валидными данными, здесь уже зашиты проверки(CommandChecker.check_status_code и CommandChecker.check_response_body)
+    user_response = user_steps.user_create_successful()
+
+    # 2. Получаем пользователя по id
+    user_data = user_steps.get_user_by_id(user_id=user_response.json()["id"])
+
+    # 3. Проверяем тело ответа от get_user_by_id относительно тела которые у нас еще от create_user
+    # CommandChecker.check_response_body(user_data, user_response.json())
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def test_create_user_with_patronymic(user_request):

@@ -1,12 +1,12 @@
 from checkers.user_checker import CommandChecker
-from endpoints.users import UserRequest
-from users import payloads
+from endpoints.user_request import UserRequest
+from users import user_payload
 
 
 class UserSteps:
     def __init__(self):
         self.request = UserRequest()
-        self.payload = payloads
+        self.payload = user_payload
 
     def user_create_successful(self, **kwargs):
         payload = self.payload.get_request_body_for_user(**kwargs)

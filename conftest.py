@@ -1,5 +1,5 @@
 import pytest
-from endpoints.users import UserRequest
+from endpoints.user_request import UserRequest
 from steps.user_steps import UserSteps
 
 

@@ -7,7 +7,7 @@ def get_request_body_for_user(**kwargs) -> dict:
     """
     Конфигурирует тело запроса для создания пользователя.
     :return: Словарь с полями:
-        - phone_number (str)
+        - phone_number (int)
         - firstname (str)
         - lastname (str)
         - patronymic (str)
@@ -27,7 +27,7 @@ def get_request_body_for_user(**kwargs) -> dict:
         "password": generate_valid_password(),
     }
 
-    for k, v in kwargs.items():
-        payload[k] = v
+    for key, value in kwargs.items():
+        payload[key] = value
 
     return payload

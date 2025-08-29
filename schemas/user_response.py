@@ -1,15 +1,16 @@
-from pydantic import BaseModel
+from dataclasses import dataclass, asdict
+from typing import Optional
 
 
-class UserResponseSchema(BaseModel):
+@dataclass
+class UserResponseSchema:
     """
-    Класс, описывающий структуру ответа сервера при работе с пользователем.
-    Используется для валидации и проверки того, что возвращает сервер.
+    Структура ответа сервера при работе с пользователем.
     """
     phone_number: int
     firstname: str
     lastname: str
-    patronymic: str | None
+    patronymic: Optional[str]
     birthday: str
     passport_serial: int
     passport_number: int
