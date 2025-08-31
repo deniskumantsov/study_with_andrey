@@ -1,7 +1,7 @@
 import requests
 import pytest
 from pydantic import BaseModel
-from generators.phone_number_generator import generate_valid_phone_number, generate_invalid_phone_number_nine, \
+from utils.phone_number_generator import generate_valid_phone_number, generate_invalid_phone_number_nine, \
     generate_invalid_phone_number_eleven, generate_invalid_phone_number_str, generate_invalid_phone_number_none
 
 

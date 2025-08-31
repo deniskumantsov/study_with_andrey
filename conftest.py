@@ -11,7 +11,7 @@ def delete_user():
         user_steps = UserSteps()
         user_steps.delete_user_by_id(user_id)
         user_steps.get_user_by_id(user_id, expected_status=404)
-
+    return _delete_user
 
 
 
