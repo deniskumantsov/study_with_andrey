@@ -1,3 +1,6 @@
+import copy
+
+
 class UserChecker:
     """
     Класс содержащий проверки ответа от сервера.
@@ -11,7 +14,7 @@ class UserChecker:
         :param payload: Payload(dict).
         """
         actual_response_body = response.json()
-        expected_response_body = payload.copy() # Лучше использовать дипкопи.
+        expected_response_body = copy.deepcopy(payload)
 
         assert "id" in actual_response_body, "В теле ответа отсутствует обязательное поле 'id'."
         user_id = actual_response_body["id"]

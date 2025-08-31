@@ -47,3 +47,20 @@ class UserSteps:
         CommonChecker.check_status_code(response, 200)
         return response
 
+
+    def user_create_with_expected_failure(self, expected_status=422, **kwargs):
+        """
+        Создаёт невалидного пользователя, ожидая, что сервер вернёт статус-код 422.
+        Если сервер вернёт статус-код 200, то пользователь удаляется.
+        :param expected_status: Ожидаемый статус-код.
+        :param kwargs:
+        :return:
+        """
+        payload = self.payload.get_request_body_for_user(**kwargs)
+        response = self.request.create_user_request(payload)
+
+        if response.status_code == 200:
+            self.delete_user_by_id(response.json()["id"])
+
+        CommonChecker.check_status_code(response, expected_status)
+        return response
