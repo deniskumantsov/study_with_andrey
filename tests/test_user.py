@@ -48,15 +48,15 @@ def test_create_user_without_non_required(delete_user):
     delete_user(user_data_response.json()["id"])
 
 
-@pytest.mark.parametrize("invalid_phone", test_data.invalid_phone_numbers)
-def test_create_user_with_invalid_phone_number(invalid_phone):
+@pytest.mark.parametrize("phone_number, expected_status", test_data.phone_number_test_data)
+def test_create_user_with_invalid_phone_number(phone_number, expected_status):
     """
 
     """
     user_steps = UserSteps()
-    user_steps.user_create_with_expected_failure(phone_number=invalid_phone)
+    user_steps.user_create_with_expected_failure(phone_number=phone_number, expected_status=expected_status)
 
-
+# Подумать над доработкой
 def test_register_user_with_non_unique_phone_number(delete_user):
     """
 
@@ -68,10 +68,55 @@ def test_register_user_with_non_unique_phone_number(delete_user):
     delete_user(user_id)
 
 
-@pytest.mark.parametrize("firstname, expected_status", test_data.invalid_firstnames)
-def test_create_user_with_invalid_firstnames(firstname, expected_status):
+@pytest.mark.parametrize("firstname, expected_status", test_data.firstname_test_data)
+def test_create_user_with_invalid_firstname(firstname, expected_status):
     """
 
     """
     user_steps = UserSteps()
     user_steps.user_create_with_expected_failure(firstname=firstname, expected_status=expected_status)
+
+
+@pytest.mark.parametrize("lastname, expected_status", test_data.lastname_test_data)
+def test_create_user_with_invalid_lastname(lastname, expected_status):
+    """
+
+    """
+    user_steps = UserSteps()
+    user_steps.user_create_with_expected_failure(lastname=lastname, expected_status=expected_status)
+
+
+@pytest.mark.parametrize("patronymic, expected_status", test_data.patronymic_test_data)
+def test_create_user_with_invalid_patronymic(patronymic, expected_status):
+    """
+
+    """
+    user_steps = UserSteps()
+    user_steps.user_create_with_expected_failure(patronymic=patronymic, expected_status=expected_status)
+
+
+@pytest.mark.parametrize("birthday, expected_status", test_data.birthday_test_data)
+def test_create_user_with_invalid_birthday(birthday, expected_status):
+    """
+
+    """
+    user_steps = UserSteps()
+    user_steps.user_create_with_expected_failure(birthday=birthday, expected_status=expected_status)
+
+
+@pytest.mark.parametrize("passport_serial, expected_status", test_data.passport_serial_test_data)
+def test_create_user_with_invalid_passport_serial(passport_serial, expected_status):
+    """
+
+    """
+    user_steps = UserSteps()
+    user_steps.user_create_with_expected_failure(passport_serial=passport_serial, expected_status=expected_status)
+
+
+@pytest.mark.parametrize("passport_number, expected_status", test_data.passport_number_test_data)
+def test_create_user_with_invalid_passport_number(passport_number, expected_status):
+    """
+
+    """
+    user_steps = UserSteps()
+    user_steps.user_create_with_expected_failure(passport_number=passport_number, expected_status=expected_status)

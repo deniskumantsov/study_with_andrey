@@ -1,5 +1,6 @@
 from faker import Faker
 import random
+from datetime import date, timedelta
 
 
 faker = Faker("ru_RU")
@@ -80,3 +81,36 @@ def generate_valid_password() -> str:
     """
     password = "Qwerty!123"
     return password
+
+
+def generate_birthday_exact_age(age: int) -> str:
+    """
+    Генерирует дату рождения для человека ровно age лет сегодня.
+    :param age:
+    :return:
+    """
+    today = date.today()
+    birth_date = today.replace(year=today.year - age)
+    return birth_date.isoformat()
+
+
+def generate_birthday_age_yesterday(age: int) -> str:
+    """
+    Генерирует дату рождения для человека, которому исполнилось age лет вчера.
+    :param age:
+    :return:
+    """
+    today = date.today()
+    birth_date = today.replace(year=today.year - age) - timedelta(days=1)
+    return birth_date.isoformat()
+
+
+def generate_birthday_age_tomorrow(age: int) -> str:
+    """
+    Генерирует дату рождения для человека, которому исполнится age лет завтра.
+    :param age:
+    :return:
+    """
+    today = date.today()
+    birth_date = today.replace(year=today.year - age) + timedelta(days=1)
+    return birth_date.isoformat()

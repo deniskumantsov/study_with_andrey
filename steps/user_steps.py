@@ -48,9 +48,9 @@ class UserSteps:
         return response
 
 
-    def user_create_with_expected_failure(self, expected_status=422, **kwargs):
+    def user_create_with_expected_failure(self, expected_status, **kwargs):
         """
-        Создаёт невалидного пользователя, ожидая, что сервер вернёт статус-код 422.
+        Создаёт пользователя, ожидая, что сервер вернёт статус-код 422.
         Если сервер вернёт статус-код 200, то пользователь удаляется.
         :param expected_status: Ожидаемый статус-код.
         :param kwargs:
