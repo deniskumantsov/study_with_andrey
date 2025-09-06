@@ -1,11 +1,11 @@
 class CommonChecker:
     """
-    Класс содержащий проверки ответа от сервера.
+    Класс содержащий чекеры.
     """
     @staticmethod
     def check_status_code(response, expected_status: int):
         """
-        Проверка совпадения фактического статус-кода с ожидаемым.
+        Проверка соответствия фактического статус-кода с ожидаемым.
         :param response: Объект Response.
         :param expected_status: Ожидаемый статус-код.
         """
@@ -17,7 +17,7 @@ class CommonChecker:
     @staticmethod
     def check_equal_response_bodies(response1, response2):
         """
-        Проверка совпадения одного тела ответа с другим телом ответа от сервера.
+        Проверка соответствия одного тела ответа с другим телом ответа от сервера.
         :param response1: Объект Response.
         :param response2: Объект Response.
         """

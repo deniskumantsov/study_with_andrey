@@ -34,7 +34,29 @@ def get_request_body_for_user(**kwargs) -> dict:
 
     return payload
 
+# Password сейчас генерируется только потому оно обязательно.
+def get_request_body_for_user_update(user, **kwargs) -> dict:
+    """
+    Конфигурирует тело запроса для обновления пользователя.
+    :return: Словарь с полями:
+        - firstname (str)
+        - lastname (str)
+        - patronymic (str)
+        - birthday (str)
+        - password (str)
+    """
+    payload = {
+        "firstname": user.get("firstname"),
+        "lastname": user.get("lastname"),
+        "patronymic": user.get("patronymic"),
+        "birthday": user.get("birthday"),
+        "password": generate_valid_password(),
+    }
 
+    for key, value in kwargs.items():
+        payload[key] = value
+
+    return payload
 
 
 # Пример реализации через dataclass
