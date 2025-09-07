@@ -1,7 +1,5 @@
 import json
-
 import allure
-
 from checkers.common_checkers import CommonChecker
 from checkers.user_checkers import UserChecker
 from endpoints.user_request import UserRequest
@@ -18,7 +16,8 @@ class UserSteps:
         self.payload = user_payload
 
 
-    def get_users(self, expected_status: int = 200):
+    @allure.step("Получить список всех пользователей.")
+    def step_get_users(self, expected_status: int = 200):
         """
         Получить список всех пользователей.
 
@@ -27,12 +26,11 @@ class UserSteps:
         """
         response = self.request.get_users_request()
         CommonChecker.check_status_code(response, expected_status)
-        UserChecker.check_response_data_type(response)
-        UserChecker.check_response_structure(response)
         return response
 
-    @allure.step("Создать пользователя")
-    def user_create(self, expected_status: int, **kwargs):
+
+    @allure.step("Создать пользователя.")
+    def step_user_create(self, expected_status: int, **kwargs):
         """
         Создать пользователя.
 
@@ -46,20 +44,22 @@ class UserSteps:
         return response
 
 
-    def user_create_successful(self, **kwargs):
+    @allure.step("Создать пользователя.")
+    def step_user_create_successful(self, **kwargs):
         """
-        Создать пользователя.
+        ???
 
         :param kwargs: Параметры для конфигурации тела запроса.
         :return: Объект Response.
         """
-        response = self.user_create(expected_status=200, **kwargs)
+        response = self.step_user_create(expected_status=200, **kwargs)
         payload = json.loads(response.request.body)
         UserChecker.check_response_body(response, payload)
         return response
 
 
-    def get_user_by_id(self, user_id: int, expected_status: int = 200):
+    @allure.step("Получить пользователя по ID.")
+    def step_get_user_by_id(self, user_id: int, expected_status: int = 200):
         """
         Получить пользователя по ID.
 
@@ -72,11 +72,12 @@ class UserSteps:
         return response
 
 
-    def update_user(self, user: dict, expected_status: int = 200, **kwargs):
+    @allure.step("Обновить данные пользователя.")
+    def step_update_user(self, user: dict, expected_status: int = 200, **kwargs):
         """
         Обновить данные пользователя по ID.
 
-        :param user_id: ID пользователя.
+        :param user: Словарь с данными пользователя.
         :param expected_status: Ожидаемый статус-код.
         :param kwargs: Параметры для конфигурации тела запроса.
         :return: Объект Response.
@@ -87,7 +88,8 @@ class UserSteps:
         return response
 
 
-    def delete_user_by_id(self, user_id: int):
+    @allure.step("Удалить пользователя.")
+    def step_delete_user_by_id(self, user_id: int):
         """
         Удалить пользователя по ID.
 

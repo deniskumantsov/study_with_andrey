@@ -1,5 +1,3 @@
-from dataclasses import dataclass, field, asdict
-from typing import Optional
 from utils.generators import generate_valid_phone_number, generate_valid_firstname, generate_valid_lastname, \
     generate_valid_patronymic, generate_valid_birthday, generate_valid_passport_serial, generate_valid_passport_number, \
     generate_valid_password
@@ -8,6 +6,7 @@ from utils.generators import generate_valid_phone_number, generate_valid_firstna
 def get_request_body_for_user(**kwargs) -> dict:
     """
     Конфигурирует тело запроса для создания пользователя.
+
     :return: Словарь с полями:
         - phone_number (int)
         - firstname (str)
@@ -34,10 +33,11 @@ def get_request_body_for_user(**kwargs) -> dict:
 
     return payload
 
-# Password сейчас генерируется только потому оно обязательно.
+# Password сейчас генерируется только потому это обязательное поле, вообще его быть не должно.
 def get_request_body_for_user_update(user, **kwargs) -> dict:
     """
     Конфигурирует тело запроса для обновления пользователя.
+
     :return: Словарь с полями:
         - firstname (str)
         - lastname (str)
@@ -57,34 +57,3 @@ def get_request_body_for_user_update(user, **kwargs) -> dict:
         payload[key] = value
 
     return payload
-
-
-# Пример реализации через dataclass
-# @dataclass
-# class UserResponseSchema:
-#     """
-#     Структура ответа сервера при работе с пользователем.
-#     """
-#     phone_number: int = field(default_factory=generate_valid_phone_number)
-#     firstname: str = field(default_factory=generate_valid_firstname)
-#     lastname: str = field(default_factory=generate_valid_lastname)
-#     patronymic: Optional[str] = None
-#     birthday: str = field(default_factory=generate_valid_birthday)
-#     passport_serial: int = field(default_factory=generate_valid_passport_serial)
-#     passport_number: int = field(default_factory=generate_valid_passport_number)
-#     password: str = field(default_factory=generate_valid_password)
-#
-#     def as_payload(self):
-#         if self.patronymic:
-#             return asdict(self)
-#         else:
-#             payload = asdict(self)
-#             del payload["patronymic"]
-#             return payload
-#
-#
-# if __name__ == "__main__":
-#     payload = UserResponseSchema(phone_number="denis molodec")
-#     payload.title="andrey molodec"
-#     print(payload.title)
-#     print(payload.as_payload())
