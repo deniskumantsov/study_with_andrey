@@ -69,9 +69,8 @@ class CommonChecker:
         )
 
 
-    # Улучшить метод, не очевидно что с чем сравнивается, откуда берется и т.д.
     @staticmethod
-    def check_equal_response_bodies(response1, response2):
+    def check_equal_response_bodies(response1, response2): # Улучшить метод, не очевидно что с чем сравнивается, откуда берется и т.д.
         """
         Проверка соответствия одного тела ответа с другим телом ответа от сервера.
 

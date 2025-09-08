@@ -44,10 +44,10 @@ class UserSteps:
         return response
 
 
-    @allure.step("Создать пользователя.")
+    @allure.step("Создать валидного пользователя.")
     def step_user_create_successful(self, **kwargs):
         """
-        ???
+        Создать валидного пользователя.
 
         :param kwargs: Параметры для конфигурации тела запроса.
         :return: Объект Response.
@@ -55,6 +55,19 @@ class UserSteps:
         response = self.step_user_create(expected_status=200, **kwargs)
         payload = json.loads(response.request.body)
         UserChecker.check_response_body(response, payload)
+        return response
+
+
+    @allure.step("Создать невалидного пользователя.")
+    def step_user_create_unsuccessful(self, **kwargs):
+        """
+        Создать невалидного пользователя.
+
+        :param kwargs: Параметры для конфигурации тела запроса.
+        :return: Объект Response.
+        """
+        payload = self.payload.get_request_body_for_user(**kwargs)
+        response = self.request.create_user_request(payload)
         return response
 
 
