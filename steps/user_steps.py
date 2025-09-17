@@ -85,10 +85,10 @@ class UserSteps:
         return response
 
 
-    @allure.step("Обновить данные пользователя.")
-    def step_update_user(self, user: dict, **kwargs):
+    @allure.step("Обновить данные пользователя по ID валидными данными.")
+    def step_update_user_by_id_with_valid_fields(self, user: dict, **kwargs):
         """
-        Обновить данные пользователя по ID.
+        Обновить данные пользователя по ID валидными данными.
         :param user: Словарь с данными пользователя.
         :param kwargs: Параметры для конфигурации тела запроса.
         :return: Объект Response.
@@ -97,6 +97,21 @@ class UserSteps:
         response = self.request.update_user_request(user.get("id"), payload)
         # здесь будет коллектор
         CommonChecker.check_status_code_ok(response)
+        return response
+
+
+    @allure.step("Обновить данные пользователя по ID невалидными данными.")
+    def step_update_user_by_id_with_invalid_fields(self, user: dict, **kwargs):
+        """
+        Обновить данные пользователя по ID невалидными данными.
+        :param user: Словарь с данными пользователя.
+        :param kwargs: Параметры для конфигурации тела запроса.
+        :return: Объект Response.
+        """
+        payload = self.payload.get_request_body_for_user_update(user, **kwargs)
+        response = self.request.update_user_request(user.get("id"), payload)
+        # здесь будет коллектор
+        CommonChecker.check_status_code_422(response)
         return response
 
 

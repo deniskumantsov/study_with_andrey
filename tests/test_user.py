@@ -278,7 +278,7 @@ def test_get_user_by_invalid_id(user):
     user_steps = UserSteps()
     user_id = user.get("id")
 
-    # Удаляем пользователя через шаг
+    # Удаляем пользователя
     user_steps.step_delete_user_by_id(user_id)
 
     # GET по удалённому ID
@@ -287,14 +287,14 @@ def test_get_user_by_invalid_id(user):
 
 
 @pytest.mark.parametrize("user", ["random"], indirect=True)
-def test_update_user(user): # Разобраться
+def test_update_user_all_fields(user):
     """
 
     """
     user_steps = UserSteps()
 
     # PATCH
-    update_user_data = user_steps.step_update_user(
+    update_user_data = user_steps.step_update_user_by_id_with_valid_fields(
         user,
         firstname="NewFirst",
         lastname="NewLast",
@@ -308,4 +308,88 @@ def test_update_user(user): # Разобраться
     CommonChecker.check_equal_response_bodies(update_user_data, user_data)
 
 
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_update_user_one_field(user):
+    """
 
+    :param user:
+    """
+    user_steps = UserSteps()
+
+    # PATCH только firstname
+    update_user_data = user_steps.step_update_user_by_id_with_valid_fields(
+        user,
+        firstname="UpdateFirst"
+    )
+
+    user_data = user_steps.step_get_user_by_id(update_user_data.json()["id"])
+
+    CommonChecker.check_equal_response_bodies(update_user_data, user_data)
+
+
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_update_user_by_invalid_id(user):
+    """
+
+    :param user:
+    """
+    user_steps = UserSteps()
+    user_id = user.get("id")
+
+    # Удаляем пользователя
+    user_steps.step_delete_user_by_id(user_id)
+
+    # Обновить по удаленному id
+    user_steps.step_update_user_by_id_with_valid_fields(
+        user,
+        firstname="UpdateFirst"
+    )
+
+
+@pytest.mark.parametrize("firstname", test_data.negative_firstname_test_data)
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_update_user_with_invalid_firstname(user, firstname):
+    """
+
+    :param user:
+    :param firstname:
+    """
+    user_steps = UserSteps()
+
+    # PATCH с невалидным именем
+    user_steps.step_update_user_by_id_with_invalid_fields(
+        user,
+        firstname=firstname
+    )
+
+
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_update_user_with_passport_number(user):
+    """
+
+    :param user:
+    """
+    user_steps = UserSteps()
+
+    # PATCH с серией паспорта
+    user_steps.step_update_user_by_id_with_invalid_fields(
+        user,
+        passport_number="1234"
+    )
+
+
+def test_delete_user(create_user):
+    """
+
+    :param create_user:
+    :return:
+    """
+    user_steps = UserSteps()
+    user_id = create_user.get("id")
+
+    # Удаляем пользователя
+    user_data_response = user_steps.step_delete_user_by_id(user_id)
+    CommonChecker.check_status_code_ok(user_data_response)
+
+    # GET по удалённому пользователю
+    user_steps.step_get_user_by_id(user_id=user_id, expected_status=422)
