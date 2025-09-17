@@ -67,7 +67,7 @@ class UserSteps:
 
 
     @allure.step("Получить пользователя по ID.")
-    def step_get_user_by_id(self, user_id: int):
+    def step_get_user_by_id(self, user_id: int, expected_status: int = 200):
         """
         Получить пользователя по ID.
 
@@ -76,7 +76,12 @@ class UserSteps:
         """
         response = self.request.get_user_request(user_id)
         # здесь будет коллектор
-        CommonChecker.check_status_code_ok(response)
+        if expected_status == 200:
+            CommonChecker.check_status_code_ok(response)
+        elif expected_status == 422:
+            CommonChecker.check_status_code_422(response)
+        elif expected_status == 404:
+            CommonChecker.check_status_code_404(response)
         return response
 
 

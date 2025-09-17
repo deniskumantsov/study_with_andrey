@@ -53,3 +53,22 @@ class UserChecker:
             assert not missing_keys, (
                 f"У пользователя с id:{user.get('id')} отсутствуют ключи: {missing_keys}"
             )
+
+
+    @staticmethod
+    def check_user_in_list(response, created_user: dict):
+        """
+        Проверка, что созданный пользователь есть в списке пользователей из ответа.
+
+        :param response: Объект Response.
+        :param created_user: Словарь с данными созданного пользователя.
+        """
+        users_list = response.json()
+
+        found = False
+        for user in users_list:
+            if user.get("id") == created_user.get("id"):
+                found = True
+                break
+
+        assert found, f"Пользователь с id:{created_user.get('id')} не найден в списке пользователей"

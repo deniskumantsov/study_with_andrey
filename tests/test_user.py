@@ -6,26 +6,36 @@ from checkers.common_checkers import CommonChecker
 from data import data_test_user as test_data
 
 # хуета полная, молодец. Проверить что в респонсе есть тот пользак котоырй создан в фикстуре
-def test_get_users_list(create_and_delete_user):
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_get_users_list(user):
     """
     Позитивная проверка получения списка всех пользователей.
     Шаги:
     1. Создать пользователя с валидными данными.
     2. Получить список всех пользователей.
-        - Отправить GET-запрос
+        - Отправить GET-запрос.
         - Проверить статус-код == 200.
     3. Проверить структуру ответа.
         - Тип данных ответа.
         - Структура пользователя.
-    4. Удалить созданного пользователя.
+    4. Проверить что созданный пользователь есть в списке.
+    5. Удалить созданного пользователя.
 
-    :param create_and_delete_user:
+    :param user:
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_get_users()
 
-    CommonChecker.check_response_data_type(user_data_response, list)
-    UserChecker.check_response_structure(user_data_response)
+    # Получить список всех пользователей
+    users_data_response = user_steps.step_get_users()
+
+    # Проверка типа данных ответа
+    CommonChecker.check_response_data_type(users_data_response, list)
+
+    # Проверка структуры пользователей
+    UserChecker.check_response_structure(users_data_response)
+
+    # Проверка, что созданный пользователь есть в списке
+    UserChecker.check_user_in_list(users_data_response, user)
 
 
 def test_create_user_with_non_required(delete_user):
@@ -46,7 +56,8 @@ def test_create_user_with_non_required(delete_user):
     """
     user_steps = UserSteps()
     user_data_response = user_steps.step_valid_user_create(**test_data.request_body_with_non_required)
-    # здесь нужен чекер для проверки тела ответа
+    UserChecker.check_response_body(user_data_response, test_data.request_body_with_non_required)
+
     user_id = user_data_response.json()["id"]
 
     user_data = user_steps.step_get_user_by_id(user_id=user_id)
@@ -73,7 +84,8 @@ def test_create_user_without_non_required(delete_user):
     """
     user_steps = UserSteps()
     user_data_response = user_steps.step_valid_user_create(**test_data.request_body_without_non_required)
-    # здесь нужен чекер для проверки тела ответа
+    UserChecker.check_response_body(user_data_response, test_data.request_body_without_non_required)
+
     user_id = user_data_response.json()["id"]
 
     user_data = user_steps.step_get_user_by_id(user_id=user_id)
@@ -98,7 +110,7 @@ def test_register_user_with_non_unique_phone_number(delete_user): # Подума
     """
     user_steps = UserSteps()
     user_data_response = user_steps.step_valid_user_create(**test_data.request_body_with_non_required)
-    # здесь нужен чекер для проверки тела ответа
+    UserChecker.check_response_body(user_data_response, test_data.request_body_with_non_required)
 
     user_id = user_data_response.json()["id"]
 
@@ -114,7 +126,7 @@ def test_create_user_with_invalid_phone_number(phone_number):
     Шаги:
     1. Создать пользователя с невалидным phone_number.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param phone_number: Номер телефона.
     """
@@ -129,7 +141,7 @@ def test_create_user_with_invalid_firstname(firstname):
     Шаги:
     1. Создать пользователя с невалидным firstname.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param firstname: Имя пользователя.
     """
@@ -146,7 +158,7 @@ def test_create_user_with_invalid_lastname(lastname):
     Шаги:
     1. Создать пользователя с невалидным lastname.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param lastname: Фамилия пользователя.
     """
@@ -161,7 +173,7 @@ def test_create_user_with_invalid_patronymic(patronymic):
     Шаги:
     1. Создать пользователя с невалидным patronymic.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param patronymic: Отчество пользователя.
     """
@@ -176,7 +188,7 @@ def test_create_user_with_invalid_birthday(birthday):
     Шаги:
     1. Создать пользователя с невалидным birthday.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param birthday: Дата рождения пользователя.
     """
@@ -191,7 +203,7 @@ def test_create_user_with_invalid_passport_serial(passport_serial):
     Шаги:
     1. Создать пользователя с невалидным passport_serial.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param passport_serial: Серия паспорта пользователя.
     """
@@ -206,7 +218,7 @@ def test_create_user_with_invalid_passport_number(passport_number):
     Шаги:
     1. Создать пользователя с невалидным passport_number.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param passport_number: Номер паспорта пользователя.
     """
@@ -221,7 +233,7 @@ def test_create_user_with_invalid_password(password):
     Шаги:
     1. Создать пользователя с невалидным password.
         - Отправить POST-запрос.
-        - Проверить статус-код == expected_status.
+        - Проверить статус-код.
 
     :param password: Пароль пользователя.
     """
@@ -229,7 +241,8 @@ def test_create_user_with_invalid_password(password):
     user_steps.step_invalid_user_create(password=password)
 
 
-def test_get_user_by_valid_id(create_and_delete_user):
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_get_user_by_valid_id(user):
     """
     Позитивная проверка получения пользователя по ID.
     Шаги:
@@ -240,17 +253,19 @@ def test_get_user_by_valid_id(create_and_delete_user):
         - Проверить тело ответа, полученное при GET-запросе по ID.
     3. Удалить созданного пользователя.
 
-    :param create_and_delete_user:
+    :param user:
     """
     user_steps = UserSteps()
-    user_id = create_and_delete_user.json()["id"]
+    user_id = user.get("id")
 
     user_data_response = user_steps.step_get_user_by_id(user_id=user_id)
 
-    CommonChecker.check_equal_response_bodies(create_and_delete_user, user_data_response)
+    user_data = user_data_response.json()
+    CommonChecker.check_equal_dicts(user, user_data)
 
 
-def test_get_user_by_invalid_id(create_user_response, delete_user):
+@pytest.mark.parametrize("user", ["random"], indirect=True)
+def test_get_user_by_invalid_id(user):
     """
     Негативная проверка получения пользователя по ID.
     Шаги:
@@ -258,17 +273,15 @@ def test_get_user_by_invalid_id(create_user_response, delete_user):
     2. Удалить пользователя.
     3. Отправить GET-запрос по не существующему ID удаленного пользователя.
 
-    :param create_user_response:
-    :param delete_user:
-    :return:
+    :param user:
     """
     user_steps = UserSteps()
-    user_id = create_user_response.json()["id"]
+    user_id = user.get("id")
 
-    # Удаляем пользователя через фикстуру
-    delete_user(user_id)
+    # Удаляем пользователя через шаг
+    user_steps.step_delete_user_by_id(user_id)
 
-    # GET по несущ ID
+    # GET по удалённому ID
     user_steps.step_get_user_by_id(user_id=user_id, expected_status=422)
 
 
@@ -293,3 +306,6 @@ def test_update_user(user): # Разобраться
     user_data = user_steps.step_get_user_by_id(update_user_data.json()["id"])
 
     CommonChecker.check_equal_response_bodies(update_user_data, user_data)
+
+
+

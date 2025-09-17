@@ -6,6 +6,8 @@ class CommonChecker:
     def check_status_code_ok(response):
         """
         Проверка, что статус-код == 200.
+
+        :param response: Объект Response.
         """
         assert response.status_code == 200, (
             f"Ожидаемый статус-код: 200, фактический статус-код: {response.status_code}"
@@ -16,9 +18,22 @@ class CommonChecker:
     def check_status_code_422(response):
         """
         Проверка, что статус-код == 422.
+
+        :param response: Объект Response.
         """
         assert response.status_code == 422, (
             f"Ожидаемый статус-код: 422, фактический статус-код: {response.status_code}"
+        )
+
+    @staticmethod
+    def check_status_code_404(response):
+        """
+        Проверка, что статус-код == 404.
+
+        :param response: Объект Response.
+        """
+        assert response.status_code == 404, (
+            f"Ожидаемый статус-код: 404, фактический статус-код: {response.status_code}"
         )
 
 
