@@ -3,15 +3,22 @@ class CommonChecker:
     Класс содержащий общие чекеры.
     """
     @staticmethod
-    def check_status_code(response, expected_status: int):
+    def check_status_code_ok(response):
         """
-        Проверка соответствия фактического статус-кода с ожидаемым.
+        Проверка, что статус-код == 200.
+        """
+        assert response.status_code == 200, (
+            f"Ожидаемый статус-код: 200, фактический статус-код: {response.status_code}"
+        )
 
-        :param response: Объект Response.
-        :param expected_status: Ожидаемый статус-код.
+
+    @staticmethod
+    def check_status_code_422(response):
         """
-        assert response.status_code == expected_status, (
-            f"Ожидаемый статус-код: {expected_status}, фактический статус-код: {response.status_code}."
+        Проверка, что статус-код == 422.
+        """
+        assert response.status_code == 422, (
+            f"Ожидаемый статус-код: 422, фактический статус-код: {response.status_code}"
         )
 
 
@@ -23,7 +30,7 @@ class CommonChecker:
         :param data: Тело ответа.
         :param key: Ожидаемый ключ.
         """
-        assert key in data, f"В ответе отсутствует обязательный ключ '{key}'."
+        assert key in data, f"Отсутствует обязательный ключ '{key}'"
 
 
     @staticmethod
@@ -37,8 +44,8 @@ class CommonChecker:
         """
         value = data[key]
         assert isinstance(value, expected_data_type), (
-            f"Ожидаемый тип данных значения: {expected_data_type}. "
-            f"Фактический тип данных: {type(value)}. Значение: {value}."
+            f"Ожидаемый тип данных значения: {expected_data_type}"
+            f"Фактический тип данных: {type(value)}. Значение: {value}"
         )
 
 

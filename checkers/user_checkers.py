@@ -33,7 +33,6 @@ class UserChecker:
         """
         Проверка структуры списка всех пользователей.
         Проверка, что все пользователи содержат обязательные ключи.
-        Если список пустой проверка структуры пропускается.
 
         :param response: Объект Response.
         """
@@ -49,11 +48,8 @@ class UserChecker:
             "id",
         }
 
-        if not users:
-            return
-
         for user in users:
             missing_keys = expected_keys - set(user.keys())
             assert not missing_keys, (
-                f"В теле ответа у пользователя {user} отсутствуют ключи: {missing_keys}"
+                f"У пользователя с id:{user.get('id')} отсутствуют ключи: {missing_keys}"
             )

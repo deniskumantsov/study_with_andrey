@@ -5,7 +5,7 @@ from checkers.user_checkers import UserChecker
 from checkers.common_checkers import CommonChecker
 from data import data_test_user as test_data
 
-
+# хуета полная, молодец. Проверить что в респонсе есть тот пользак котоырй создан в фикстуре
 def test_get_users_list(create_and_delete_user):
     """
     Позитивная проверка получения списка всех пользователей.
@@ -45,8 +45,8 @@ def test_create_user_with_non_required(delete_user):
     :param delete_user:
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_successful(**test_data.request_body_with_non_required)
-
+    user_data_response = user_steps.step_valid_user_create(**test_data.request_body_with_non_required)
+    # здесь нужен чекер для проверки тела ответа
     user_id = user_data_response.json()["id"]
 
     user_data = user_steps.step_get_user_by_id(user_id=user_id)
@@ -72,8 +72,8 @@ def test_create_user_without_non_required(delete_user):
     :param delete_user:
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_successful(**test_data.request_body_without_non_required)
-
+    user_data_response = user_steps.step_valid_user_create(**test_data.request_body_without_non_required)
+    # здесь нужен чекер для проверки тела ответа
     user_id = user_data_response.json()["id"]
 
     user_data = user_steps.step_get_user_by_id(user_id=user_id)
@@ -97,191 +97,136 @@ def test_register_user_with_non_unique_phone_number(delete_user): # Подума
     :param delete_user:
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_successful(**test_data.request_body_with_non_required)
+    user_data_response = user_steps.step_valid_user_create(**test_data.request_body_with_non_required)
+    # здесь нужен чекер для проверки тела ответа
 
     user_id = user_data_response.json()["id"]
 
-    user_steps.step_user_create(phone_number=test_data.request_body_with_non_required["phone_number"], expected_status=422)
+    user_steps.step_invalid_user_create(phone_number=test_data.request_body_with_non_required["phone_number"])
 
     delete_user(user_id)
 
 
-@pytest.mark.parametrize("phone_number, expected_status", test_data.phone_number_test_data)
-def test_create_user_with_invalid_phone_number(phone_number, expected_status, entity_collector):
+@pytest.mark.parametrize("phone_number", test_data.negative_phone_number_test_data)
+def test_create_user_with_invalid_phone_number(phone_number):
     """
     Негативная проверка создания пользователя с невалидным номером телефона.
     Шаги:
     1. Создать пользователя с невалидным phone_number.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param phone_number: Номер телефона.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(phone_number=phone_number, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(phone_number=phone_number)
 
 
-@pytest.mark.parametrize("firstname, expected_status", test_data.firstname_test_data)
-def test_create_user_with_invalid_firstname(firstname, expected_status, entity_collector):
+@pytest.mark.parametrize("firstname", test_data.negative_firstname_test_data)
+def test_create_user_with_invalid_firstname(firstname):
     """
     Негативная проверка создания пользователя с невалидным именем.
     Шаги:
     1. Создать пользователя с невалидным firstname.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param firstname: Имя пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(firstname=firstname, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(firstname=firstname)
 
 
-@allure.title("Тест такой то")
-@allure.feature("фича регистрации")
-@pytest.mark.parametrize("lastname, expected_status", test_data.lastname_test_data)
-def test_create_user_with_invalid_lastname(lastname, expected_status, entity_collector):
+@allure.title("Тест создания пользователя с невалидной фамилией.")
+@allure.feature("Фича регистрации нового пользователя.")
+@pytest.mark.parametrize("lastname", test_data.negative_lastname_test_data)
+def test_create_user_with_invalid_lastname(lastname):
     """
     Негативная проверка создания пользователя с невалидной фамилией.
     Шаги:
     1. Создать пользователя с невалидным lastname.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param lastname: Фамилия пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(lastname=lastname, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(lastname=lastname)
 
 
-@pytest.mark.parametrize("patronymic, expected_status", test_data.patronymic_test_data)
-def test_create_user_with_invalid_patronymic(patronymic, expected_status, entity_collector):
+@pytest.mark.parametrize("patronymic", test_data.negative_patronymic_test_data)
+def test_create_user_with_invalid_patronymic(patronymic):
     """
     Негативная проверка создания пользователя с невалидным отчеством.
     Шаги:
     1. Создать пользователя с невалидным patronymic.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param patronymic: Отчество пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(patronymic=patronymic, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(patronymic=patronymic)
 
 
-@pytest.mark.parametrize("birthday, expected_status", test_data.birthday_test_data)
-def test_create_user_with_invalid_birthday(birthday, expected_status, entity_collector):
+@pytest.mark.parametrize("birthday", test_data.negative_birthday_test_data)
+def test_create_user_with_invalid_birthday(birthday):
     """
     Негативная проверка создания пользователя с невалидной датой рождения.
     Шаги:
     1. Создать пользователя с невалидным birthday.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param birthday: Дата рождения пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(birthday=birthday, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(birthday=birthday)
 
 
-@pytest.mark.parametrize("passport_serial, expected_status", test_data.passport_serial_test_data)
-def test_create_user_with_invalid_passport_serial(passport_serial, expected_status, entity_collector):
+@pytest.mark.parametrize("passport_serial", test_data.negative_passport_serial_test_data)
+def test_create_user_with_invalid_passport_serial(passport_serial):
     """
     Негативная проверка создания пользователя с невалидной серией паспорта.
     Шаги:
     1. Создать пользователя с невалидным passport_serial.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param passport_serial: Серия паспорта пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(passport_serial=passport_serial, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(passport_serial=passport_serial)
 
 
-@pytest.mark.parametrize("passport_number, expected_status", test_data.passport_number_test_data)
-def test_create_user_with_invalid_passport_number(passport_number, expected_status, entity_collector):
+@pytest.mark.parametrize("passport_number", test_data.negative_passport_number_test_data)
+def test_create_user_with_invalid_passport_number(passport_number):
     """
     Негативная проверка создания пользователя с невалидным номером паспорта.
     Шаги:
     1. Создать пользователя с невалидным passport_number.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param passport_number: Номер паспорта пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(passport_number=passport_number, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(passport_number=passport_number)
 
 
-@pytest.mark.parametrize("password, expected_status", test_data.password_test_data)
-def test_create_user_with_invalid_password(password, expected_status, entity_collector):
+@pytest.mark.parametrize("password", test_data.negative_password_test_data)
+def test_create_user_with_invalid_password(password):
     """
     Негативная проверка создания пользователя с невалидным паролем.
     Шаги:
     1. Создать пользователя с невалидным password.
         - Отправить POST-запрос.
         - Проверить статус-код == expected_status.
-    2. Удалить созданного пользователя.
 
     :param password: Пароль пользователя.
-    :param expected_status: Ожидаемый статус-код.
-    :param entity_collector: Фикстура для удаления созданных сущностей.
     """
     user_steps = UserSteps()
-    user_data_response = user_steps.step_user_create_unsuccessful(password=password, expected_status=expected_status)
-
-    entity_collector(user_data_response)
-
-    CommonChecker.check_status_code(user_data_response, expected_status)
+    user_steps.step_invalid_user_create(password=password)
 
 
 def test_get_user_by_valid_id(create_and_delete_user):
@@ -308,6 +253,10 @@ def test_get_user_by_valid_id(create_and_delete_user):
 def test_get_user_by_invalid_id(create_user_response, delete_user):
     """
     Негативная проверка получения пользователя по ID.
+    Шаги:
+    1. Создать пользователя.
+    2. Удалить пользователя.
+    3. Отправить GET-запрос по не существующему ID удаленного пользователя.
 
     :param create_user_response:
     :param delete_user:
@@ -323,8 +272,8 @@ def test_get_user_by_invalid_id(create_user_response, delete_user):
     user_steps.step_get_user_by_id(user_id=user_id, expected_status=422)
 
 
-user_test_data = {"firstname": "Petya"}
-@pytest.mark.parametrize("user", [user_test_data], indirect=True)
+
+@pytest.mark.parametrize("user", ["random"], indirect=True)
 def test_update_user(user): # Разобраться
     """
 
