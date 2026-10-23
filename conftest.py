@@ -1,7 +1,7 @@
 from typing import Optional
 import pytest
 from endpoints.user_request import UserRequest
-from steps.user_steps import UserSteps
+from steps.user_steps import UserSteps, Collector
 from data import data_test_user as test_data
 
 
@@ -48,8 +48,8 @@ def user(request):
     user_steps.step_delete_user_by_id(user.get("id"))
     # user_steps.step_get_user_by_id(user.get("id"), expected_status=404) # Можно вообще отказаться здесь от гета, т.к это проверится в тестах и делит заведомо исправен.
     # в гете оставить лучше expected статус оставить чтобы не горадить с ним потом.
+
     # try:
     #     user_steps.step_delete_user_by_id(user.get("id"))
     # except AssertionError:
-    #     # Пользователь уже был удалён в тесте
     #     pass

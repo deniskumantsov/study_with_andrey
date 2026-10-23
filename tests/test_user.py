@@ -5,7 +5,7 @@ from checkers.user_checkers import UserChecker
 from checkers.common_checkers import CommonChecker
 from data import data_test_user as test_data
 
-# хуета полная, молодец. Проверить что в респонсе есть тот пользак котоырй создан в фикстуре
+# полная, молодец. Проверить что в респонсе есть тот пользак котоырй создан в фикстуре
 @pytest.mark.parametrize("user", ["random"], indirect=True)
 def test_get_users_list(user):
     """

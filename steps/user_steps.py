@@ -1,19 +1,52 @@
-import json
 import allure
 from checkers.common_checkers import CommonChecker
-from checkers.user_checkers import UserChecker
 from endpoints.user_request import UserRequest
 from users import user_payload
+from collections import defaultdict, namedtuple
+# defaultdict — это словарь, который автоматически создает значение по умолчанию для нового ключа. Здесь будет
+# использоваться для хранения пользователей.
+# namedtuple — это «именованный кортеж», который ведет себя как обычный кортеж, но позволяет обращаться к полям по имени
+# (id, name, notes) вместо индекса.
 
 
-# PomoikaCollector:
-#
-#     def add():
-#         pass
-#
-#     def delete():
-#         pass
-#
+UserShortInfo = namedtuple("UserShortInfo", ["id", "name", "notes"])
+# ["id", "name", "notes"] поля объекта
+# id  уникальный ид пользователя.
+# name имя пользователя (в примере берётся firstname).
+# notes поле для дополнительных пометок, например "deleted", чтобы помечать пользователей, которых нужно удалить.
+class DataCollector:
+    _data_dict = defaultdict(list)  # глобальное хранилище для всех экземпляров
+
+    def __init__(self):
+        self.__dict__ = self._data_dict
+
+    def collect(self, entity: dict):
+        """
+
+        :param entity:
+        """
+        user_info = UserShortInfo(id=entity["id"], name=entity["firstname"], notes=None)
+        self._data_dict["users"].append(user_info)
+        # Метод возьмёт из словаря(из созданного юзера грубо говоря) только поля id и firstname для name,
+        # Создаст объект UserShortInfo(id=..., name=..., notes=None),
+        # И добавит его в список _data_dict["users"].
+
+    def update(self, entity_id: int, info: str = "deleted"):
+        """
+
+        :param entity_id:
+        :param info:
+        :return:
+        """
+        updated_list = []
+        for entity in self._data_dict["users"]:
+            if entity.id == entity_id:
+                updated_list.append(entity._replace(notes=info))
+            else:
+                updated_list.append(entity)
+        self._data_dict["users"] = updated_list
+
+
 
 class UserSteps:
     """
@@ -61,7 +94,11 @@ class UserSteps:
         """
         payload = self.payload.get_request_body_for_user(**kwargs)
         response = self.request.create_user_request(payload)
-        # здесь будет коллектор
+
+        if response.status_code == 200:
+            user_id = response.json().get("id")
+            Collector.add(user_id)
+
         CommonChecker.check_status_code_422(response) # В теории можно вообще здесь не чекать статус код
         return response
 
